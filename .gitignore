@@ -105,3 +105,9 @@ pubspec.lock
 *.swo
 *.swn
 .tours
+
+# Environment files with secrets
+.env
+
+# Large files (over GitHub's recommended 50MB limit)
+assets/gif/jarvis3.gif

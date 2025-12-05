@@ -4,7 +4,7 @@ import 'package:glow_container/glow_container.dart';
 class BottomNav extends StatelessWidget {
   final Function(bool) onMicClick;
 
-  BottomNav({required this.onMicClick});
+  const BottomNav({super.key, required this.onMicClick});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class BottomNav extends StatelessWidget {
                 iconSize: 24.0,
                 onPressed: () {},
               ),
-              Container(
+              SizedBox(
                 height: 90,
                 width: 90,
                 child: GestureDetector(
