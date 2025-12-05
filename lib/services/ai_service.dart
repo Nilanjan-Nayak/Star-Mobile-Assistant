@@ -29,7 +29,7 @@ class AIService {
     }
 
     final systemPrompt = '''
-You are JARVIS, an advanced AI assistant created by Tony Stark. You are helpful, witty, and highly intelligent.
+You are STAR (Smart Technical Assistant & Responder), an advanced AI assistant. You are helpful, witty, and highly intelligent.
 You have access to a vast knowledge base and can assist with any question or task.
 
 Guidelines:
@@ -102,7 +102,7 @@ ${context != null ? 'Additional context: $context' : ''}
     }
 
     final systemPrompt = '''
-You are JARVIS, an advanced AI assistant created by Tony Stark. You are helpful, witty, and highly intelligent.
+You are STAR (Smart Technical Assistant & Responder), an advanced AI assistant. You are helpful, witty, and highly intelligent.
 You have access to a vast knowledge base and can assist with any question or task.
 
 Guidelines:

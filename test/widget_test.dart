@@ -6,12 +6,12 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jarvis/controller/speech_controller.dart';
-import 'package:jarvis/controller/tts_controller.dart';
-import 'package:jarvis/pages/jarvis.dart';
+import 'package:star_assistant/controller/speech_controller.dart';
+import 'package:star_assistant/controller/tts_controller.dart';
+import 'package:star_assistant/pages/star_home.dart';
 import 'package:provider/provider.dart';
 
-import 'package:jarvis/main.dart';
+import 'package:star_assistant/main.dart';
 
 void main() {
   testWidgets('App launches without crashing', (WidgetTester tester) async {
@@ -26,15 +26,15 @@ void main() {
             ),
           ),
         ],
-        child: const MyApp(),
+        child: const StarApp(),
       ),
     );
 
     // Wait for a few frames to allow initialization
     await tester.pump(const Duration(seconds: 1));
 
-    // Verify that the Jarvis widget is present
-    expect(find.byType(Jarvis), findsOneWidget);
+    // Verify that the StarHome widget is present
+    expect(find.byType(StarHome), findsOneWidget);
 
     // Verify that the app doesn't crash during initialization
     // Note: The actual text assertions are commented out because they require

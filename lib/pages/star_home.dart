@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jarvis/controller/speech_controller.dart';
-import 'package:jarvis/controller/tts_controller.dart';
-import 'package:jarvis/controller/waveform_controller.dart';
-import 'package:jarvis/models/conversation.dart';
-import 'package:jarvis/widgets/bottom_nav.dart';
+import 'package:star_assistant/controller/speech_controller.dart';
+import 'package:star_assistant/controller/tts_controller.dart';
+import 'package:star_assistant/controller/waveform_controller.dart';
+import 'package:star_assistant/models/conversation.dart';
+import 'package:star_assistant/widgets/bottom_nav.dart';
 import 'package:provider/provider.dart';
 import 'package:siri_wave/siri_wave.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 import 'dart:ui';
 import 'dart:math' as math;
 
-// Main Jarvis Widget - The root widget of the AI Assistant interface
-class Jarvis extends StatefulWidget {
-  const Jarvis({super.key});
+// Main Star Widget - The root widget of the AI Assistant interface
+class StarHome extends StatefulWidget {
+  const StarHome({super.key});
 
   @override
-  State<Jarvis> createState() => _JarvisState();
+  State<StarHome> createState() => _StarHomeState();
 }
 
-class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
+class _StarHomeState extends State<StarHome> with TickerProviderStateMixin {
   // State variables for UI control
   bool isBlob = true; // Controls main interface vs listening mode
   bool isBottomMic = false; // Controls bottom bar state
-  
+
   // Animation controllers for various effects
   late AnimationController _rotationController;
   late AnimationController _pulseController;
@@ -32,7 +32,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
   late AnimationController _floatController;
   late AnimationController _particleController;
   late AnimationController _rippleController;
-  
+
   // Animation values
   late Animation<double> _pulseAnimation;
   late Animation<double> _glowAnimation;
@@ -57,37 +57,37 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
       duration: const Duration(seconds: 30),
       vsync: this,
     )..repeat();
-    
+
     // Pulse animation for the main orb (2.5 seconds)
     _pulseController = AnimationController(
       duration: const Duration(milliseconds: 2500),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     // Glow animation for status indicators (4 seconds)
     _glowController = AnimationController(
       duration: const Duration(seconds: 4),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     // Float animation for subtle movement (3 seconds)
     _floatController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     // Particle animation for background effects (5 seconds)
     _particleController = AnimationController(
       duration: const Duration(seconds: 5),
       vsync: this,
     )..repeat();
-    
+
     // Ripple effect animation (2 seconds)
     _rippleController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat();
-    
+
     // Define animation curves and values
     _pulseAnimation = Tween<double>(
       begin: 0.98,
@@ -96,7 +96,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
       parent: _pulseController,
       curve: Curves.easeInOut,
     ));
-    
+
     _glowAnimation = Tween<double>(
       begin: 0.3,
       end: 1.0,
@@ -104,7 +104,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
       parent: _glowController,
       curve: Curves.easeInOut,
     ));
-    
+
     _floatAnimation = Tween<double>(
       begin: -10,
       end: 10,
@@ -112,7 +112,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
       parent: _floatController,
       curve: Curves.easeInOut,
     ));
-    
+
     _rippleAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -173,7 +173,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
             rotationController: _rotationController,
             particleController: _particleController,
           ),
-          
+
           // Main content area
           SafeArea(
             child: AnimatedSwitcher(
@@ -197,9 +197,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
           ),
         ],
       ),
-      bottomNavigationBar: !isBlob
-          ? _buildBottomBar(speechController)
-          : null,
+      bottomNavigationBar: !isBlob ? _buildBottomBar(speechController) : null,
     );
   }
 
@@ -214,10 +212,10 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const SizedBox(height: 30),
-                
+
                 // Header section with user info
                 _buildPremiumHeader(),
-                
+
                 // Central AI orb with animations
                 AnimatedBuilder(
                   animation: _floatAnimation,
@@ -228,7 +226,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                     );
                   },
                 ),
-                
+
                 // Bottom section with assistant name and hints
                 Column(
                   children: [
@@ -301,9 +299,9 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Welcome message
                 Text(
                   "Welcome back",
@@ -313,9 +311,9 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                     color: Colors.white.withOpacity(0.6),
                   ),
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // User name with gradient
                 ShaderMask(
                   shaderCallback: (bounds) => const LinearGradient(
@@ -350,7 +348,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
           isBlob = false;
           isBottomMic = true;
         });
-        
+
         // Toggle speech recognition
         if (speechController.isListening) {
           speechController.stopListening();
@@ -377,7 +375,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                 );
               },
             ),
-            
+
             // Main orb with pulse animation
             AnimatedBuilder(
               animation: _pulseAnimation,
@@ -411,9 +409,9 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          // Jarvis GIF
+                          // Star AI GIF
                           Image.asset(
-                            'assets/gif/jarvis.gif',
+                            'assets/gif/star.gif',
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               // Fallback if GIF not found
@@ -427,7 +425,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                               );
                             },
                           ),
-                          
+
                           // Glass overlay
                           Container(
                             decoration: BoxDecoration(
@@ -460,7 +458,6 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
         // S . T . A . R text animation
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-          
           child: TextAnimatorSequence(
             loop: true,
             children: [
@@ -479,9 +476,9 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
             ],
           ),
         ),
-        
+
         const SizedBox(height: 20),
-        
+
         // Tap hint
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -564,7 +561,8 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                         ),
                       ],
                     ),
-                    child: _buildConversationDisplay(speechController, ttsController),
+                    child: _buildConversationDisplay(
+                        speechController, ttsController),
                   ),
                 ),
               ),
@@ -583,7 +581,8 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
   }
 
   // Build conversation display area
-  Widget _buildConversationDisplay(SpeechController speechController, TTSController ttsController) {
+  Widget _buildConversationDisplay(
+      SpeechController speechController, TTSController ttsController) {
     return Container(
       child: Column(
         children: [
@@ -657,7 +656,8 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                 const Spacer(),
                 // Status indicator
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: const Color(0xFF00FF88).withOpacity(0.15),
@@ -700,7 +700,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
               ],
             ),
           ),
-          
+
           // Conversation history
           Expanded(
             child: Container(
@@ -719,7 +719,8 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 physics: const BouncingScrollPhysics(),
                 child: Column(
-                  children: speechController.conversation.messages.reversed.map((message) {
+                  children: speechController.conversation.messages.reversed
+                      .map((message) {
                     return _buildMessageBubble(message, ttsController);
                   }).toList(),
                 ),
@@ -782,15 +783,18 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
   }
 
   // Build individual message bubble
-  Widget _buildMessageBubble(ConversationMessage message, TTSController ttsController) {
+  Widget _buildMessageBubble(
+      ConversationMessage message, TTSController ttsController) {
     final isUser = message.isUser;
     final now = DateTime.now();
-    final timeStr = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
+    final timeStr =
+        "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       child: Column(
-        crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           // Sender label with timestamp
           Padding(
@@ -801,7 +805,7 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                 Text(
                   isUser ? "You" : "S.T.A.R",
                   style: GoogleFonts.inter(
-                    color: isUser 
+                    color: isUser
                         ? const Color(0xFF00D9FF)
                         : const Color(0xFF00FF88),
                     fontSize: 11,
@@ -821,10 +825,11 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
               ],
             ),
           ),
-          
+
           // Message content row
           Row(
-            mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment:
+                isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!isUser) ...[
@@ -859,7 +864,8 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
               // Message bubble
               Flexible(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(isUser ? 18 : 4),
@@ -904,10 +910,13 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Message text
-                      if (!isUser && !message.isProcessing && message.error == null)
+                      if (!isUser &&
+                          !message.isProcessing &&
+                          message.error == null)
                         TextAnimator(
                           message.text,
-                          incomingEffect: WidgetTransitionEffects.incomingSlideInFromBottom(
+                          incomingEffect:
+                              WidgetTransitionEffects.incomingSlideInFromBottom(
                             duration: const Duration(milliseconds: 600),
                             curve: Curves.easeOutQuart,
                           ),
@@ -934,7 +943,9 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                         ),
 
                       // Action buttons row
-                      if (!message.isUser && !message.isProcessing && message.error == null)
+                      if (!message.isUser &&
+                          !message.isProcessing &&
+                          message.error == null)
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
                           child: Row(
@@ -950,7 +961,8 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                                   }
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 8),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(14),
                                     gradient: LinearGradient(
@@ -960,21 +972,25 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                                               Colors.red.withOpacity(0.1),
                                             ]
                                           : [
-                                              const Color(0xFF00D9FF).withOpacity(0.2),
-                                              const Color(0xFF00D9FF).withOpacity(0.1),
+                                              const Color(0xFF00D9FF)
+                                                  .withOpacity(0.2),
+                                              const Color(0xFF00D9FF)
+                                                  .withOpacity(0.1),
                                             ],
                                     ),
                                     border: Border.all(
                                       color: ttsController.isSpeaking
                                           ? Colors.red.withOpacity(0.4)
-                                          : const Color(0xFF00D9FF).withOpacity(0.4),
+                                          : const Color(0xFF00D9FF)
+                                              .withOpacity(0.4),
                                       width: 1.5,
                                     ),
                                     boxShadow: [
                                       BoxShadow(
                                         color: ttsController.isSpeaking
                                             ? Colors.red.withOpacity(0.2)
-                                            : const Color(0xFF00D9FF).withOpacity(0.2),
+                                            : const Color(0xFF00D9FF)
+                                                .withOpacity(0.2),
                                         blurRadius: 8,
                                         offset: const Offset(0, 2),
                                       ),
@@ -994,7 +1010,9 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        ttsController.isSpeaking ? "Stop" : "Listen",
+                                        ttsController.isSpeaking
+                                            ? "Stop"
+                                            : "Listen",
                                         style: GoogleFonts.inter(
                                           color: ttsController.isSpeaking
                                               ? Colors.red
@@ -1018,11 +1036,14 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                           padding: const EdgeInsets.only(top: 12),
                           child: GestureDetector(
                             onTap: () {
-                              final speechController = Provider.of<SpeechController>(context, listen: false);
+                              final speechController =
+                                  Provider.of<SpeechController>(context,
+                                      listen: false);
                               speechController.retryLastMessage();
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(14),
                                 gradient: LinearGradient(
@@ -1236,7 +1257,8 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                           speechController.stopListening();
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
                             color: const Color(0xFF00D9FF).withOpacity(0.1),
@@ -1281,7 +1303,6 @@ class _JarvisState extends State<Jarvis> with TickerProviderStateMixin {
                       height: 80,
                       width: MediaQuery.of(context).size.width - 40,
                       showSupportBar: false,
-
                     ),
                   ),
                 ),
@@ -1370,7 +1391,7 @@ class PremiumDarkBackground extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Animated gradient mesh
         AnimatedBuilder(
           animation: rotationController,
@@ -1383,7 +1404,7 @@ class PremiumDarkBackground extends StatelessWidget {
             );
           },
         ),
-        
+
         // Floating particles
         ...List.generate(10, (index) {
           return AnimatedFloatingParticle(
@@ -1413,7 +1434,7 @@ class GradientMeshPainter extends CustomPainter {
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 100);
 
     final time = animation.value * 2 * math.pi;
-    
+
     // Blue gradient orb
     paint.shader = RadialGradient(
       colors: [
@@ -1427,7 +1448,7 @@ class GradientMeshPainter extends CustomPainter {
       ),
       radius: 200,
     ));
-    
+
     canvas.drawCircle(
       Offset(
         size.width * 0.2 + math.sin(time) * 30,
@@ -1436,7 +1457,7 @@ class GradientMeshPainter extends CustomPainter {
       200,
       paint,
     );
-    
+
     // Green gradient orb
     paint.shader = RadialGradient(
       colors: [
@@ -1450,7 +1471,7 @@ class GradientMeshPainter extends CustomPainter {
       ),
       radius: 180,
     ));
-    
+
     canvas.drawCircle(
       Offset(
         size.width * 0.8 + math.cos(time) * 40,
@@ -1475,16 +1496,16 @@ class RipplePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    
+
     for (int i = 0; i < 3; i++) {
       final adjustedProgress = (progress + i * 0.33) % 1.0;
       final opacity = (1.0 - adjustedProgress) * 0.3;
-      
+
       final paint = Paint()
         ..color = color.withOpacity(opacity)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2;
-      
+
       canvas.drawCircle(
         center,
         90 + (adjustedProgress * 60),
@@ -1517,7 +1538,7 @@ class AnimatedFloatingParticle extends StatelessWidget {
       builder: (context, child) {
         final progress = ((animation.value + delay) % 1.0);
         final yOffset = MediaQuery.of(context).size.height * progress;
-        
+
         return Positioned(
           left: initialPosition.dx + math.sin(progress * math.pi * 2) * 20,
           top: initialPosition.dy - yOffset,
@@ -1529,7 +1550,8 @@ class AnimatedFloatingParticle extends StatelessWidget {
               color: const Color(0xFF00D9FF).withOpacity(0.5 * (1 - progress)),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF00D9FF).withOpacity(0.3 * (1 - progress)),
+                  color:
+                      const Color(0xFF00D9FF).withOpacity(0.3 * (1 - progress)),
                   blurRadius: 5,
                 ),
               ],

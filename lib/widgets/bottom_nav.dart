@@ -49,7 +49,7 @@ class BottomNav extends StatelessWidget {
                     onMicClick(true);
                   },
                   child: Image.asset(
-                    'assets/gif/jarvis.gif',
+                    'assets/gif/star.gif',
                     fit: BoxFit.cover,
                   ),
                 ),

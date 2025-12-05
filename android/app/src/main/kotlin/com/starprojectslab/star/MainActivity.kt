@@ -1,4 +1,4 @@
-package com.starprojectslab.jarvis
+package com.starprojectslab.star
 
 import io.flutter.embedding.android.FlutterActivity
 

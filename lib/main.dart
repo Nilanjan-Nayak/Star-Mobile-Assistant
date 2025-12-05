@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:jarvis/controller/speech_controller.dart';
-import 'package:jarvis/controller/tts_controller.dart';
-import 'package:jarvis/pages/jarvis.dart';
+import 'package:star_assistant/controller/speech_controller.dart';
+import 'package:star_assistant/controller/tts_controller.dart';
+import 'package:star_assistant/pages/star_home.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -35,13 +35,13 @@ void main() async {
           update: (context, tts, previous) => previous ?? SpeechController(tts),
         ),
       ],
-      child: const MyApp(),
+      child: const StarApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class StarApp extends StatelessWidget {
+  const StarApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -49,11 +49,13 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarColor: Color.fromARGB(0, 0, 0, 0)));
     return MaterialApp(
+      title: 'STAR AI Assistant',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Jarvis(),
+      home: const StarHome(),
     );
   }
 }
