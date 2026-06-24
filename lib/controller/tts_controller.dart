@@ -17,9 +17,59 @@ class TTSController extends ChangeNotifier {
   Future<void> _initializeTTS() async {
     try {
       await _flutterTts.setLanguage("en-US");
-      await _flutterTts.setSpeechRate(0.5);
+      await _flutterTts.setSpeechRate(0.52); // Slightly faster for natural speaking rhythm
       await _flutterTts.setVolume(1.0);
       await _flutterTts.setPitch(1.0);
+      await _flutterTts.awaitSpeakCompletion(true);
+
+      // Dynamically select a high-quality premium/neural/natural voice if available
+      try {
+        final List<dynamic>? voices = await _flutterTts.getVoices;
+        if (voices != null && voices.isNotEmpty) {
+          String? selectedVoiceName;
+          String? selectedVoiceLocale;
+          
+          // Priority keywords for natural sounding voices
+          final priorityKeywords = ['neural', 'natural', 'google', 'wavenet'];
+          
+          for (final keyword in priorityKeywords) {
+            for (final voice in voices) {
+              if (voice is Map) {
+                final String name = (voice['name'] ?? '').toString().toLowerCase();
+                final String locale = (voice['locale'] ?? '').toString().toLowerCase();
+                
+                if ((locale.contains('en-us') || locale.contains('en-gb')) && name.contains(keyword)) {
+                  selectedVoiceName = voice['name']?.toString();
+                  selectedVoiceLocale = voice['locale']?.toString();
+                  break;
+                }
+              }
+            }
+            if (selectedVoiceName != null) break;
+          }
+          
+          // Fallback to any en-US voice
+          if (selectedVoiceName == null) {
+            for (final voice in voices) {
+              if (voice is Map) {
+                final String locale = (voice['locale'] ?? '').toString().toLowerCase();
+                if (locale.contains('en-us')) {
+                  selectedVoiceName = voice['name']?.toString();
+                  selectedVoiceLocale = voice['locale']?.toString();
+                  break;
+                }
+              }
+            }
+          }
+          
+          if (selectedVoiceName != null && selectedVoiceLocale != null) {
+            await _flutterTts.setVoice({"name": selectedVoiceName, "locale": selectedVoiceLocale});
+            debugPrint("Selected Premium Voice: $selectedVoiceName ($selectedVoiceLocale)");
+          }
+        }
+      } catch (e) {
+        debugPrint("Error fetching/setting high-quality voice: $e");
+      }
 
       _flutterTts.setStartHandler(() {
         _isSpeaking = true;
